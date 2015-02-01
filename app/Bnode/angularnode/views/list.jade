@@ -3,8 +3,8 @@ extends layout
 block content
 	h1= title
 	div(class='row')
-		div(ng-repeat="item in vm.lists track by item.id",style="padding:10px")
-			{{ item.id }}
+		div(ng-repeat="item in vm.lists track by item._id",style="padding:10px")
+			{{ item.details }}
 			button(class='btn btn-danger',ng-click="vm.removeItem(item)") x
 	div(class="row")
 		form(role="form")
