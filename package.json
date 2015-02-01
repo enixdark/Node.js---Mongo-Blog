@@ -1,24 +1,26 @@
 {
-	"name":"Example",
-	"version":"0.0.1",
-	"description":"",
-	"main":"app.js",
-	"dependencies":{
-		"consolidate":"~0.9.1",
-		"express":"~4.10.4",
-		"mongodb":"~1.4.12",
-		"swig":"~1.4.2",
-		"body-parser":"~1.10.0",
-		"multer":"0.1.6",
-		"depd":"~1.0.0",
-		"bytes":"~1.0.0",
-		"raw-body":"~1.0.0",
-		"iconv-lite":"~0.4.5",
-		"on-finished":"2.1.1",
-		"media-typer":"0.3.0",
-		"type-is":"1.5.3",
-		"qs":"2.3.3"
-		},
-		"author":"Cqshinn",
-		"license":"MIT"
-	}
+  "name": "Example",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "~1.10.0",
+    "bytes": "~1.0.0",
+    "consolidate": "~0.9.1",
+    "debug": "^2.1.1",
+    "depd": "~1.0.0",
+    "express": "~4.10.4",
+    "iconv-lite": "~0.4.5",
+    "media-typer": "0.3.0",
+    "mongodb": "~1.4.12",
+    "multer": "0.1.6",
+    "on-finished": "2.1.1",
+    "qs": "2.3.3",
+    "raw-body": "~1.0.0",
+    "request": "^2.51.0",
+    "swig": "~1.4.2",
+    "type-is": "1.5.3"
+  },
+  "author": "Cqshinn",
+  "license": "MIT"
+}
