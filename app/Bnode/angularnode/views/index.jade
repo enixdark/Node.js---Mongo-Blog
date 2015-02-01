@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+  p {{ bind.name }} Welcome to #{title}
+  label type your name :
+  input(type="text",ng-model="bind.name")
+  button(class="btn btn-danger",ng-click="bind.clearName()") Clear Name
+

@@ -1,0 +1,15 @@
+doctype html
+html(ng-app="demo")
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-theme.css')
+
+    script(type='text/javascript',src='/javascripts/angular.min.js')
+    script(type='text/javascript',src='/javascripts/jquery.min.js')
+    script(type='text/javascript',src='/javascripts/bootstrap.min.js')
+    script(type='text/javascript',src='/javascripts/application.js')
+
+  body(ng-controller="MainCtrl")
+    block content

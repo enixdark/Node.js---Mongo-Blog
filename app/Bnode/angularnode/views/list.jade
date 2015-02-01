@@ -1,0 +1,16 @@
+extends layout
+
+block content
+	h1= title
+	div(class='row')
+		div(ng-repeat="item in vm.lists track by item.id",style="padding:10px")
+			{{ item.id }}
+			button(class='btn btn-danger',ng-click="vm.removeItem(item)") x
+	div(class="row")
+		form(role="form")
+			div(class="form-group")
+				label(for="newItemDetails") New Item Details:
+				input(type="text",class="form-control",placeholder="Details of new todo item",
+					ng-model="vm.newItemDetails")
+				button(type="submit",class="btn btn-primary",
+					ng-click="vm.addItem()",ng-disabled="!vm.newItemDetails") Add
