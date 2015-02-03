@@ -11,14 +11,31 @@ var notes = require('./routes/notes');
 
 var app = express();
 
-var model = require('./models/models-sqlite3/notes');
+//change path if you decided to other database or filesystem
+var model = require('./models/models-sequelize/notes');
 
-model.connect("./data/db.sqlite3", function(err) {
-    if (err) throw err;
+//uncomment if use file or simple relationship database
+// model.connect("./data/db.sqlite3", function(err) {
+//     if (err) throw err;
+// });
+
+//uncommet if use ORM or ODM
+model.connect({
+    dbname:"notes",
+    username:"",
+    password:"",
+    params:{
+        host:'localhost',
+        dialect:'sqlite',
+        storage: "data/db.sqlite3"
+    }
+},function(err){
+    throw err;
 });
 [ routes,notes ].forEach(function(router) {
     router.configure({ model: model });
 });
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
