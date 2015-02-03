@@ -12,7 +12,7 @@ var notes = require('./routes/notes');
 var app = express();
 
 //change path if you decided to other database or filesystem
-var model = require('./models/models-sequelize/notes');
+var model = require('./models/models-mongoose/notes');
 
 //uncomment if use file or simple relationship database
 // model.connect("./data/db.sqlite3", function(err) {
@@ -20,18 +20,19 @@ var model = require('./models/models-sequelize/notes');
 // });
 
 //uncommet if use ORM or ODM
-model.connect({
-    dbname:"notes",
-    username:"",
-    password:"",
-    params:{
-        host:'localhost',
-        dialect:'sqlite',
-        storage: "data/db.sqlite3"
-    }
-},function(err){
-    throw err;
-});
+// model.connect({
+//     dbname:"notes",
+//     username:"",
+//     password:"",
+//     params:{
+//         host:'localhost',
+//         dialect:'sqlite',
+//         storage: "data/db.sqlite3"
+//     }
+// },function(err){
+//     throw err;
+// });
+model.connect("mongodb://localhost:27017/notes");
 [ routes,notes ].forEach(function(router) {
     router.configure({ model: model });
 });
