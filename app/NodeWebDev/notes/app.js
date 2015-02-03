@@ -6,13 +6,23 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var fib = require('./routes/fibonacci');
+var users = require('./routes/users');
+var notes = require('./routes/notes');
 
 var app = express();
 
+var model = require('./models/models-fs/notes');
+
+model.connect("./data", function(err) {
+    if (err) throw err;
+});
+[ notes ].forEach(function(router) {
+    router.configure({ model: model });
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -23,7 +33,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/fibonacci',fib);
+app.use('/users', users);
+app.use('/notes', notes);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
