@@ -11,12 +11,12 @@ var notes = require('./routes/notes');
 
 var app = express();
 
-var model = require('./models/models-fs/notes');
+var model = require('./models/models-sqlite3/notes');
 
-model.connect("./data", function(err) {
+model.connect("./data/db.sqlite3", function(err) {
     if (err) throw err;
 });
-[ notes ].forEach(function(router) {
+[ routes,notes ].forEach(function(router) {
     router.configure({ model: model });
 });
 // view engine setup

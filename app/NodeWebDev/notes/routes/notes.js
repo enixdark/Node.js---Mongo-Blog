@@ -57,9 +57,12 @@ router.configure = function(params){
 // });
 
 var readNote = function(key, res, done) {
-	var _key = key.split('.').shift();
+	// var _key = key.split('.').shift();
+	var _key = key;
+	console.warn(key);
 	notes.read(_key,
 		function(err, data) {
+			util.log(data);
 			if (err) {
 				res.render('error', {
 					title: "Error",
@@ -73,6 +76,8 @@ var readNote = function(key, res, done) {
 router
 .get('/',function(req,res,next){
 	notes.titles(function(err,titles){
+		util.log(JSON.stringify(titles));
+
 		if(err){
 			res.render('error', {
 				title: "Error",
@@ -102,7 +107,7 @@ router
 			res.render('noteedit',{
 				title:'Edit a Note',
 				docreate:false,
-				notekey:req.query.key.split('.').shift(),
+				notekey:req.query.key,//req.query.key.split('.').shift(),
 				note:data
 			});
 		});
@@ -140,10 +145,13 @@ router
 });
 
 router.post('/notesave',function(req, res, next) {
+	util.log(req.body.docreate);
+
 	((req.body.docreate === "create")
 		? notes.create : notes.update
 		)(req.body.notekey, req.body.title, req.body.body,
 		function(err) {
+			util.log("Hello");
 			if (err) {
 				res.render('error', {
 					title: "Could not update file" + err,
