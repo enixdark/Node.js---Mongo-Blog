@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 // var notes = require('../models/notes')
 var util = require('util');
-
+var users = require('./users');
 var notes = undefined;
 router.configure = function(params){
 	notes = params.model;
@@ -56,7 +56,7 @@ router.configure = function(params){
 // 	})
 // });
 
-var readNote = function(key, res, done) {
+var readNote = function(key, user,res, done) {
 	// var _key = key.split('.').shift();
 	var _key = key;
 	console.warn(key);
@@ -66,6 +66,7 @@ var readNote = function(key, res, done) {
 			if (err) {
 				res.render('error', {
 					title: "Error",
+					user: user ? user : undefined,
 					error: "Could not found note " + key
 				});
 				done(err);
@@ -74,30 +75,38 @@ var readNote = function(key, res, done) {
 }
 
 router
-.get('/',function(req,res,next){
+.get('/',users.ensureAuthenticated,function(req,res,next){
 	notes.titles(function(err,titles){
 		util.log(JSON.stringify(titles));
 
 		if(err){
 			res.render('error', {
 				title: "Error",
+				user: req.user ? req.user : undefined,
 				error: "Could not found note " + err
 			});
 		}
-		res.render('index', { title: 'Notes',notes:titles });
+		res.render('index', { title: 'Notes',
+			notes:titles,
+			user: req.user ? req.user : undefined
+		});
 	});
 })
-.get('/noteadd',function(req,res,next){
+.get('/noteadd',users.ensureAuthenticated,function(req,res,next){
+	var user = req.user ? req.user : undefined;
+
 	res.render('noteedit', {
 		title: "Add a Note",
 		docreate: true,
 		notekey: "",
+		user: user,
 		note: undefined
 	});
 })
-.get('/noteedit',function(req,res,next){
+.get('/noteedit',users.ensureAuthenticated,function(req,res,next){
+	var user = req.user ? req.user : undefined;
 	if(req.query.key){
-		readNote(req.query.key,res,function(err,data){
+		readNote(req.query.key,user,res,function(err,data){
 			if(err){
 				res.render('error',{
 					title:'Error',
@@ -107,18 +116,22 @@ router
 			res.render('noteedit',{
 				title:'Edit a Note',
 				docreate:false,
+				user: user,
 				notekey:req.query.key,//req.query.key.split('.').shift(),
 				note:data
 			});
 		});
 	}
 })
-.get('/notedestroy',function(req,res,next){
+.get('/notedestroy',users.ensureAuthenticated,function(req,res,next){
+	var user = req.user ? req.user : undefined;
+
 	if(req.query.key){
 		notes.delete(req.query.key,function(err){
 			if(err){
 				res.render('error',{
 					title:'Error',
+					user: user,
 					error:'Not found The data' + err
 				});
 			}
@@ -128,15 +141,18 @@ router
 })
 .get('/noteview',function(req,res,next){
 	if(req.query.key){
-		readNote(req.query.key,res,function(err,data){
+		var user = req.user ? req.user : undefined;
+		readNote(req.query.key,user,res,function(err,data){
 			if(err){
 				res.render('error',{
 					title:'Error',
+					user: user,
 					error:'Not found The data' + err
 				});
 			}
 			res.render('noteview',{
 				title: data['title'],
+				user: user,
 				notekey: req.query.key,
 				note: data
 			});
@@ -144,8 +160,9 @@ router
 	}
 });
 
-router.post('/notesave',function(req, res, next) {
+router.post('/notesave',users.ensureAuthenticated,function(req, res, next) {
 	util.log(req.body.docreate);
+	var user = req.user ? req.user : undefined;
 
 	((req.body.docreate === "create")
 		? notes.create : notes.update
@@ -155,6 +172,7 @@ router.post('/notesave',function(req, res, next) {
 			if (err) {
 				res.render('error', {
 					title: "Could not update file" + err,
+					user: user,
 					error: err
 				});
 			} else {

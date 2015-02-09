@@ -20,9 +20,11 @@ var NoteSchema = new Schema({
 
 mongoose.model('notes',NoteSchema);
 var notes = mongoose.model('notes');
-
+exports.note = notes;
 exports.create = function(key,title,body,callback){
 	var _notes = new notes();
+	console.log("this is " + _notes);
+	debugger;
 	_notes.title = title;
 	_notes.notekey = key;
 	_notes.body = body;

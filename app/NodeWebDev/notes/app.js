@@ -4,39 +4,72 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var notes = require('./routes/notes');
+var flash = require('connect-flash');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var seqConnectParams = require('./sequelize-params');
+
 
 var app = express();
 
-//change path if you decided to other database or filesystem
-var model = require('./models/models-mongoose/notes');
+app.use(session({
+  secret: 'secret-key'
+}));
+app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
+passport.serializeUser(users.serialize);
+passport.deserializeUser(users.deserialize);
+passport.use(users.strategy);
+//change path if you decided to other database or filesystem
+// var model = require('./models/models-mongoose/notes');
+var noteModel = require('./models/models-sequelize/notes');
+var usersModel = require('./models/models-sequelize/users');
 //uncomment if use file or simple relationship database
 // model.connect("./data/db.sqlite3", function(err) {
 //     if (err) throw err;
 // });
 
 //uncommet if use ORM or ODM
-// model.connect({
-//     dbname:"notes",
-//     username:"",
-//     password:"",
-//     params:{
-//         host:'localhost',
-//         dialect:'sqlite',
-//         storage: "data/db.sqlite3"
-//     }
-// },function(err){
-//     throw err;
-// });
-model.connect("mongodb://localhost:27017/notes");
-[ routes,notes ].forEach(function(router) {
-    router.configure({ model: model });
+noteModel.connect(
+    seqConnectParams,
+    function(err){
+        throw err;
+    });
+
+
+
+usersModel.connect(
+    seqConnectParams,
+    function(err) {
+        if (err) throw err;
+    });
+// model.connect("mongodb://localhost:27017/notes");
+
+
+users.passport = passport;
+users.configure({
+    model:usersModel,
+    passport:passport
 });
 
+[ routes,notes ].forEach(function(router) {
+    router.configure({
+        model: noteModel,
+    });
+});
+
+
+
+
+// app.get('/logout',
+//     users.doLogout);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -47,7 +80,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
