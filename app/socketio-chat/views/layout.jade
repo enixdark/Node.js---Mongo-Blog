@@ -1,0 +1,16 @@
+doctype html5
+html
+  block head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    //- link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    script(src="/javascripts/jquery.min.js")
+    //- script(src="/javascripts/bootstrap.min.js")
+    script(src="http://localhost:3000/socket.io/socket.io.js")
+    script(src="/javascripts/chat.js")
+    //- script $('.modal').modal('show');
+  body
+    header#banner
+      h1 Answer some chat
+    block content
+    footer hope

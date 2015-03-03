@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  section#welcome
+    div Welcome
+    a#startchat(type="button", class="btn", href="/rooms") Startnow
+
